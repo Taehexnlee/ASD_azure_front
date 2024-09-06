@@ -1,54 +1,49 @@
-import React, { useEffect, useState } from 'react'
-import axios from 'axios'
-import { Link, useParams } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 export default function Home() {
 
-    const [users, setUsers] = useState([]);
-    const {id} = useParams()
+  const [products, setProducts] = useState([]);
 
-    useEffect(() => {
-        loadUser();
-    }, [])
+  useEffect(() => {
+    loadProducts();
+  }, []);
 
-    const loadUser = async () => {
-        const result = await axios.get("http://localhost:8080/users");
-        setUsers(result.data);  // assuming result.data is the array of users
-    }
+  const loadProducts = async () => {
+    const result = await axios.get("http://localhost:8080/products");
+    setProducts(result.data);
+  };
 
-    const deleteUser = async (id) => {
-        await axios.delete(`http://localhost:8080/user/${id}`);
-        loadUser();
-    }
+  const deleteProduct = async (id) => {
+    await axios.delete(`http://localhost:8080/product/${id}`);
+    loadProducts();
+  };
 
-    return (
-        <div>
-            <table className="table">
-                <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">First</th>
-                        <th scope="col">Last</th>
-                        <th scope="col">Handle</th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {users.map((user, index) => (
-                        <tr key={user.id}> {/* Adding the unique key here */}
-                            <th scope="row">{index + 1}</th>
-                            <td>{user.name}</td>
-                            <td>{user.userName}</td>
-                            <td>{user.email}</td>
-                            <td>
-                                <Link className='btn btn-primary mx-2' to={`/viewuser/${user.id}`}>View</Link>
-                                <Link className='btn btn-outline-primary mx-2' to={`/edituser/${user.id}`}>Edit</Link>
-                                <button className='btn btn-danger mx-2' onClick={() => deleteUser(user.id)}>Delete</button>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-        </div>
-    )
+  return (
+    <div className="container my-4">
+      <div className="row">
+        {products.map((product, index) => (
+          <div className="col-md-4 mb-4" key={product.id}>
+            <div className="card h-100 shadow-sm">
+              <div className="card-body">
+                <h5 className="card-title">{product.name}</h5>
+                <p className="card-text">
+                  {product.description}
+                </p>
+                <p className="card-text">
+                  <strong>Price:</strong> ${product.price}
+                </p>
+                <div className="d-flex justify-content-between">
+                  <Link className="btn btn-primary" to={`/viewproduct/${product.id}`}>View</Link>
+                  <Link className="btn btn-outline-primary" to={`/editproduct/${product.id}`}>Edit</Link>
+                  <button className="btn btn-danger" onClick={() => deleteProduct(product.id)}>Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }
