@@ -34,14 +34,13 @@ export default function ViewProduct() {
         <div className='col-md-6 offset-md-3 border rounded p-4 mt-2 shadow'>
           <h2 className='text-center m-4'>Product Detail</h2>
           <div className="card">
-            <div className='card-header'>
-              Product ID: {id}
+            <div className='card-body'>
               <ul className='list-group list-group-flush'>
                 <li className='list-group-item'>
                   <b>Name:</b> {product.name}
                 </li>
                 <li className='list-group-item'>
-                  <b>Description:</b> {product.description}
+                  <b>Description:</b> {product.description} {/* Description shown here */}
                 </li>
                 <li className='list-group-item'>
                   <b>Price:</b> ${product.price}
