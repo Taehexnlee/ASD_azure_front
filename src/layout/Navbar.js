@@ -1,12 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export default function Navbar() {
+export default function Navbar({ darkMode, toggleDarkMode }) {
   return (
     <div>
-      <nav className="navbar navbar-expand-lg navbar-dark bg-primary">
+      <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
         <div className="container-fluid">
-          <Link className="navbar-brand" href="#" to={'/'}>
+          <Link className="navbar-brand" to={'/'}>
             ASD Products
           </Link>
           <button
@@ -21,7 +21,20 @@ export default function Navbar() {
             <span className="navbar-toggler-icon"></span>
           </button>
 
-          <Link className='btn btn-outline-light' to="/addproduct">Add Product</Link>
+          <div className="form-check form-switch ms-auto">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              id="darkModeSwitch"
+              checked={darkMode}
+              onChange={toggleDarkMode}
+            />
+            <label className="form-check-label" htmlFor="darkModeSwitch">
+              {darkMode ? 'Dark Mode' : 'Light Mode'}
+            </label>
+          </div>
+
+          <Link className='btn btn-outline-primary ms-3' to="/addproduct">Add Product</Link>
         </div>
       </nav>
     </div>

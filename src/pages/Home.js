@@ -24,8 +24,13 @@ export default function Home() {
     <div className="container my-4">
       <div className="row">
         {products.map((product, index) => (
-          <div className="col-md-4 mb-4" key={product.id}>
+          <div className="col-md-3 mb-4" key={product.id}> {/* col-md-3 for 4 cards in a row */}
             <div className="card h-100 shadow-sm">
+              <img
+                src="https://via.placeholder.com/150"
+                className="card-img-top"
+                alt="Product Image"
+              />
               <div className="card-body">
                 <h5 className="card-title">{product.name}</h5>
                 <p className="card-text">

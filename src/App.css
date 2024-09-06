@@ -36,3 +36,57 @@
     transform: rotate(360deg);
   }
 }
+/* Light Mode */
+body.light-mode, .App.light-mode {
+  background-color: #f8f9fa; /* Light background */
+  color: #212529; /* Dark text */
+}
+
+.container.light-mode {
+  background-color: #ffffff; /* Light mode container background */
+}
+
+/* Dark Mode */
+body.dark-mode, .App.dark-mode {
+  background-color: #121212; /* Dark background */
+  color: #f8f9fa; /* Light text */
+}
+
+.container.dark-mode {
+  background-color: #1c1c1c; /* Dark mode container background */
+}
+
+.navbar-dark .navbar-brand {
+  color: #f8f9fa !important;
+}
+
+.navbar-light .navbar-brand {
+  color: #212529 !important;
+}
+
+.card {
+  transition: all 0.3s ease-in-out;
+}
+
+.card:hover {
+  transform: scale(1.05);
+}
+
+.dark-mode .card {
+  background-color: #343a40; /* Dark card background */
+  color: #f8f9fa; /* Light text */
+}
+
+.light-mode .card {
+  background-color: #ffffff; /* Light card background */
+  color: #212529; /* Dark text */
+}
+
+/* Ensure a smooth transition between modes */
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.App {
+  min-height: 100vh; /* Ensure the app stretches to full height */
+}

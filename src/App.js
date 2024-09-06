@@ -5,14 +5,20 @@ import Home from './pages/Home';
 import AddProduct from './products/AddProduct';
 import EditProduct from './products/EditProduct';
 import ViewProduct from './products/ViewProduct';
-
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useState } from 'react';
 
 function App() {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="App">
+    <div className={`App ${darkMode ? 'dark-mode' : 'light-mode'}`}>
       <Router>
-        <Navbar />
+        <Navbar darkMode={darkMode} toggleDarkMode={toggleDarkMode} />
         <Routes>
           <Route exact path='/' element={<Home />} />
           <Route exact path='/addproduct' element={<AddProduct />} />
