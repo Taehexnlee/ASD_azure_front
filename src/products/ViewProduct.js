@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
@@ -11,6 +11,7 @@ export default function ViewProduct() {
   });
 
   const { id } = useParams();
+  let navigate = useNavigate();  // For navigation after deletion
 
   useEffect(() => {
     loadProduct();
@@ -19,6 +20,12 @@ export default function ViewProduct() {
   const loadProduct = async () => {
     const result = await axios.get(`http://localhost:8080/product/${id}`);
     setProduct(result.data);
+  };
+
+  // Delete product
+  const deleteProduct = async () => {
+    await axios.delete(`http://localhost:8080/product/${id}`);
+    navigate("/"); // Navigate back to home after deletion
   };
 
   return (
@@ -37,11 +44,18 @@ export default function ViewProduct() {
                   <b>Description:</b> {product.description}
                 </li>
                 <li className='list-group-item'>
-                  <b>Price:</b> {product.price}
+                  <b>Price:</b> ${product.price}
                 </li>
               </ul>
             </div>
           </div>
+
+          {/* Edit and Delete Buttons */}
+          <div className="d-flex justify-content-between my-2">
+            <Link className='btn btn-outline-primary' to={`/editproduct/${id}`}>Edit</Link>
+            <button className='btn btn-danger' onClick={deleteProduct}>Delete</button>
+          </div>
+
           <Link className='btn btn-primary my-2' to={"/"}>Back to Home</Link>
         </div>
       </div>
