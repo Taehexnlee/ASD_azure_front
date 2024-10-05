@@ -55,7 +55,7 @@ export default function ViewProduct() {
             <button className='btn btn-danger' onClick={deleteProduct}>Delete</button>
           </div>
 
-          <Link className='btn btn-primary my-2' to={"/"}>Back to Home</Link>
+          <Link className='btn btn-primary my-2' to={"/productpage"}>Back to Home</Link>
         </div>
       </div>
     </div>

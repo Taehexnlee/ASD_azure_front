@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useUser } from "../context/UserContext";
 
 export default function Home() {
+
+    const { user } = useUser();
+    let navigate = useNavigate();
+  
+    // Redirect to home if the user is not an admin
+    useEffect(() => {
+      if (!user || !user.isAdmin) {
+        navigate('/');
+      }
+    }, [user, navigate]);
   const [users, setUsers] = useState([]);
 
   const { id } = useParams();

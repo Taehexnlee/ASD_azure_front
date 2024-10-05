@@ -20,11 +20,11 @@ export default function AddProduct() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios.post("http://localhost:8080/product", product);
-    navigate("/");
+    navigate("/productpage");
   };
 
   const onCancel = () => {
-    navigate("/");
+    navigate("/productpage");
   };
 
     return (

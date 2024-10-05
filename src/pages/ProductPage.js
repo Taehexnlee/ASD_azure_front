@@ -1,8 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 export default function ProductPage() {
+
+  const { user } = useUser();
+  let navigate = useNavigate();
+
+  // Redirect to home if the user is not an admin
+  useEffect(() => {
+    if (!user || !user.isAdmin) {
+      navigate('/');
+    }
+  }, [user, navigate]);
 
   const [products, setProducts] = useState([]);
 

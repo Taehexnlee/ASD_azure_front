@@ -1,7 +1,16 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
 export default function Navbar({ darkMode, toggleDarkMode }) {
+  const { user, logout } = useUser();
+  let navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/'); // Navigate to the home page after logout
+  };
+
   return (
     <div>
       <nav className={`navbar navbar-expand-lg ${darkMode ? 'navbar-dark bg-dark' : 'navbar-light bg-light'}`}>
@@ -33,8 +42,22 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
               {darkMode ? 'Dark Mode' : 'Light Mode'}
             </label>
           </div>
-          <Link className='btn btn-outline-primary ms-3' to="/adduser">Log in</Link>
-          <Link className='btn btn-outline-primary ms-3' to="/addproduct">Add Product</Link>
+          
+          {user ? (
+            <>
+              {user.isAdmin && (
+                <>
+                  <Link className='btn btn-outline-primary ms-3' to="/userpage">User Page</Link>
+                  <Link className='btn btn-outline-primary ms-3' to="/productpage">Product Page</Link>
+                </>
+              )}
+              <button className='btn btn-outline-primary ms-3' onClick={handleLogout}>
+                Logout
+              </button>
+            </>
+          ) : (
+            <Link className='btn btn-outline-primary ms-3' to="/adduser">Login</Link>
+          )}
         </div>
       </nav>
     </div>

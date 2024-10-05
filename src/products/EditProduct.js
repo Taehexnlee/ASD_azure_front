@@ -30,11 +30,11 @@ export default function EditProduct() {
   const onSubmit = async (e) => {
     e.preventDefault();
     await axios.put(`http://localhost:8080/product/${id}`, product);
-    navigate("/");
+    navigate("/productpage");
   };
 
   const onCancel = () => {
-    navigate("/");
+    navigate("/productpage");
   };
 
   return (

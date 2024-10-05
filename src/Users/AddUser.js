@@ -1,9 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useUser } from '../context/UserContext';
 
 export default function AddUser() {
   let navigate = useNavigate();
+  const { login } = useUser();
 
   const [user, setUser] = useState({
     name: "",
@@ -19,8 +21,12 @@ export default function AddUser() {
 
   const onSubmit = async (e) => {
     e.preventDefault();
-    await axios.post("http://localhost:8080/user", user);
-    navigate("/");
+    const result = await axios.post("http://localhost:8080/user", user);
+    
+    // Set user in context and determine if they are an admin
+    login(result.data);
+
+    navigate("/"); // Redirect to the home page after login
   };
 
   return (
@@ -35,12 +41,12 @@ export default function AddUser() {
                 Name
               </label>
               <input
-                type={"text"}
+                type="text"
                 className="form-control"
                 placeholder="Enter your name"
                 name="name"
                 value={name}
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
               />
             </div>
             <div className="mb-3">
@@ -48,12 +54,12 @@ export default function AddUser() {
                 Username
               </label>
               <input
-                type={"text"}
+                type="text"
                 className="form-control"
                 placeholder="Enter your username"
                 name="username"
                 value={username}
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
               />
             </div>
             <div className="mb-3">
@@ -61,18 +67,18 @@ export default function AddUser() {
                 E-mail
               </label>
               <input
-                type={"text"}
+                type="text"
                 className="form-control"
                 placeholder="Enter your e-mail address"
                 name="email"
                 value={email}
-                onChange={(e) => onInputChange(e)}
+                onChange={onInputChange}
               />
             </div>
             <button type="submit" className="btn btn-outline-primary">
               Submit
             </button>
-            <Link className="btn btn-outline-danger mx-2" to="/userpage">
+            <Link className="btn btn-outline-danger mx-2" to="/">
               Cancel
             </Link>
           </form>
