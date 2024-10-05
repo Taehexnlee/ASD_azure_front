@@ -1,21 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
 export default function ProductPage() {
-
-  const { user } = useUser();
-  let navigate = useNavigate();
-
-  // Redirect to home if the user is not an admin
-  useEffect(() => {
-    if (!user || !user.isAdmin) {
-      navigate('/');
-    }
-  }, [user, navigate]);
-
   const [products, setProducts] = useState([]);
+  const { user, addToCart } = useUser();
 
   useEffect(() => {
     loadProducts();
@@ -29,11 +19,10 @@ export default function ProductPage() {
   return (
     <div className="container my-4">
       <div className="row">
-        {products.map((product, index) => (
+        {products.map((product) => (
           <div className="col-md-3 mb-4" key={product.id}>
-            {/* The card itself is clickable, but no description is shown here */}
-            <Link to={`/viewproduct/${product.id}`} className="text-decoration-none text-dark">
-              <div className="card h-100 shadow-sm">
+            <div className="card h-100 shadow-sm">
+              <Link to={`/viewproduct/${product.id}`} className="text-decoration-none text-dark">
                 <img
                   src="https://via.placeholder.com/150"
                   className="card-img-top"
@@ -45,8 +34,16 @@ export default function ProductPage() {
                     <strong>Price:</strong> ${product.price}
                   </p>
                 </div>
-              </div>
-            </Link>
+              </Link>
+              {/* Add to Cart Button for non-admin users */}
+              {user && !user.isAdmin && (
+                <div className="card-footer">
+                  <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
+                    Add to Cart
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
         ))}
       </div>

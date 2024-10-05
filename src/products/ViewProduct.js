@@ -1,7 +1,7 @@
-import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useParams, useNavigate } from "react-router-dom";
+import { useUser } from '../context/UserContext';
 
 export default function ViewProduct() {
   const [product, setProduct] = useState({
@@ -11,7 +11,8 @@ export default function ViewProduct() {
   });
 
   const { id } = useParams();
-  let navigate = useNavigate();  // For navigation after deletion
+  const { user, addToCart } = useUser(); // Get user and addToCart function
+  let navigate = useNavigate();
 
   useEffect(() => {
     loadProduct();
@@ -22,10 +23,9 @@ export default function ViewProduct() {
     setProduct(result.data);
   };
 
-  // Delete product
   const deleteProduct = async () => {
     await axios.delete(`http://localhost:8080/product/${id}`);
-    navigate("/"); // Navigate back to home after deletion
+    navigate("/productpage");
   };
 
   return (
@@ -40,22 +40,32 @@ export default function ViewProduct() {
                   <b>Name:</b> {product.name}
                 </li>
                 <li className='list-group-item'>
-                  <b>Description:</b> {product.description} {/* Description shown here */}
+                  <b>Description:</b> {product.description}
                 </li>
                 <li className='list-group-item'>
                   <b>Price:</b> ${product.price}
                 </li>
               </ul>
             </div>
+            {/* Add to Cart Button for non-admin users */}
+            {user && !user.isAdmin && (
+              <div className="card-footer">
+                <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
+                  Add to Cart
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* Edit and Delete Buttons */}
-          <div className="d-flex justify-content-between my-2">
-            <Link className='btn btn-outline-primary' to={`/editproduct/${id}`}>Edit</Link>
-            <button className='btn btn-danger' onClick={deleteProduct}>Delete</button>
-          </div>
+          {/* Edit and Delete Buttons for Admin */}
+          {user && user.isAdmin && (
+            <div className="d-flex justify-content-between my-2">
+              <Link className='btn btn-outline-primary' to={`/editproduct/${id}`}>Edit</Link>
+              <button className='btn btn-danger' onClick={deleteProduct}>Delete</button>
+            </div>
+          )}
 
-          <Link className='btn btn-primary my-2' to={"/productpage"}>Back to Home</Link>
+          <Link className='btn btn-primary my-2' to={"/productpage"}>Back to Product Page</Link>
         </div>
       </div>
     </div>

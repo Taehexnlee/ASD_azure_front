@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
 
 export default function Navbar({ darkMode, toggleDarkMode }) {
-  const { user, logout } = useUser();
+  const { user, cart, logout } = useUser();
   let navigate = useNavigate();
 
   const handleLogout = () => {
@@ -42,15 +42,22 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
               {darkMode ? 'Dark Mode' : 'Light Mode'}
             </label>
           </div>
-          
+
+          {/* Display the Cart button for non-admin users */}
+          {user && !user.isAdmin && (
+            <div className="ms-3">
+              <Link className="btn btn-outline-primary" to="/cart">
+                Cart ({cart.length})
+              </Link>
+            </div>
+          )}
+
           {user ? (
             <>
               {user.isAdmin && (
-                <>
-                  <Link className='btn btn-outline-primary ms-3' to="/userpage">User Page</Link>
-                  <Link className='btn btn-outline-primary ms-3' to="/productpage">Product Page</Link>
-                </>
+                <Link className='btn btn-outline-primary ms-3' to="/userpage">User Page</Link>
               )}
+              <Link className='btn btn-outline-primary ms-3' to="/productpage">Product Page</Link>
               <button className='btn btn-outline-primary ms-3' onClick={handleLogout}>
                 Logout
               </button>
