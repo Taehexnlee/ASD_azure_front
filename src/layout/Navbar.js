@@ -33,7 +33,7 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
               {darkMode ? 'Dark Mode' : 'Light Mode'}
             </label>
           </div>
-
+          <Link className='btn btn-outline-primary ms-3' to="/adduser">Log in</Link>
           <Link className='btn btn-outline-primary ms-3' to="/addproduct">Add Product</Link>
         </div>
       </nav>
