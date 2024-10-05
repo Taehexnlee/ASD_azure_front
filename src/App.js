@@ -14,6 +14,7 @@ import EditUser from './Users/EditUser';
 import ViewUser from './Users/ViewUser';
 import { UserProvider } from './context/UserContext';
 import CartPage from './pages/CartPage';
+import Login from './Users/Login';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -32,6 +33,7 @@ function App() {
             <Route exact path='/productpage' element={<ProductPage />} />
             <Route exact path='/userpage' element={<UserPage />} />
             <Route exact path='/adduser' element={<AddUser />} />
+            <Route exact path='/login' element={<Login />} />
             <Route exact path='/cart' element={<CartPage />} />
             <Route exact path='/edituser/:id' element={<EditUser />} />
             <Route exact path='/viewuser/:id' element={<ViewUser />} />

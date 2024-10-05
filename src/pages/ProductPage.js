@@ -5,7 +5,7 @@ import { useUser } from '../context/UserContext';
 
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
-  const { user, addToCart } = useUser();
+  const { user } = useUser(); // Get user info from context
 
   useEffect(() => {
     loadProducts();
@@ -18,6 +18,14 @@ export default function ProductPage() {
 
   return (
     <div className="container my-4">
+
+      {/* Add Product Button for Admin */}
+      {user && user.isAdmin && (
+        <div className="text-center my-3">
+          <Link className="btn btn-primary" to="/addproduct">Add New Product</Link>
+        </div>
+      )}
+
       <div className="row">
         {products.map((product) => (
           <div className="col-md-3 mb-4" key={product.id}>
@@ -30,19 +38,9 @@ export default function ProductPage() {
                 />
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text">
-                    <strong>Price:</strong> ${product.price}
-                  </p>
+                  <p className="card-text"><strong>Price:</strong> ${product.price}</p>
                 </div>
               </Link>
-              {/* Add to Cart Button for non-admin users */}
-              {user && !user.isAdmin && (
-                <div className="card-footer">
-                  <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
-                    Add to Cart
-                  </button>
-                </div>
-              )}
             </div>
           </div>
         ))}

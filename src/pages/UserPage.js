@@ -4,6 +4,8 @@ import { Link, useParams } from "react-router-dom";
 import { useUser } from '../context/UserContext';
 
 export default function UserPage() {
+
+
   const [users, setUsers] = useState([]);
   const { user } = useUser(); // Get the current logged-in user
 

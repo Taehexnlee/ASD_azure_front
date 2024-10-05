@@ -63,7 +63,11 @@ export default function Navbar({ darkMode, toggleDarkMode }) {
               </button>
             </>
           ) : (
-            <Link className='btn btn-outline-primary ms-3' to="/adduser">Login</Link>
+            <>
+              <Link className='btn btn-outline-primary ms-3' to="/login">Login</Link>
+              <Link className='btn btn-outline-primary ms-3' to="/adduser">Register</Link>
+            </>
+           
           )}
         </div>
       </nav>
