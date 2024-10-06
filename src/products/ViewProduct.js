@@ -45,6 +45,9 @@ export default function ViewProduct() {
                 <li className='list-group-item'>
                   <b>Price:</b> ${product.price}
                 </li>
+                <li className='list-group-item'>
+                  <b>Category:</b> {product.category}
+                </li>
               </ul>
             </div>
             {/* Add to Cart Button for non-admin users */}

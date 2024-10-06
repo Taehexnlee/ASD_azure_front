@@ -9,10 +9,11 @@ export default function EditProduct() {
   const [product, setProduct] = useState({
     name: "",
     description: "",
-    price: ""
+    price: "",
+    category:""
   });
 
-  const { name, description, price } = product;
+  const { name, description, price, category } = product;
 
   const onInputChange = (e) => {
     setProduct({ ...product, [e.target.name]: e.target.value });
@@ -56,6 +57,24 @@ export default function EditProduct() {
           <label htmlFor='Price' className='form-label'>Price</label>
           <input type="number" className='form-control' placeholder='Enter product price' name='price' value={price} onChange={onInputChange} />
         </div>
+        <div className="mb-3">
+                <label htmlFor="category" className="form-label">Category</label>
+                <select
+                  className="form-control"
+                  name="category"
+                  value={product.category}
+                  onChange={onInputChange}
+                >
+                  <option value="">Select a Category</option>
+                  <option value="Appetizers">Appetizers</option>
+                  <option value="Main Courses">Main Courses</option>
+                  <option value="Desserts">Desserts</option>
+                  <option value="Drinks">Drinks</option>
+                  <option value="Vegetarian">Vegetarian</option>
+                  <option value="Non-Vegetarian">Non-Vegetarian</option>
+                  <option value="Gluten-Free">Gluten-Free</option>
+                </select>
+              </div>
         <button type='submit' className='btn btn-outline-primary'>Submit</button>
         <button type='button' className='btn btn-outline-danger' onClick={onCancel}>Cancel</button>
       </form>
