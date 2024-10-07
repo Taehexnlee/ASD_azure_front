@@ -25,5 +25,6 @@ jobs:
         displayName: 'Build React Application'
 
       - script: |
-          npm test -- --maxWorkers=2 --watchAll=false
+          npm test -- --maxWorkers=2 --watchAll=false --detectOpenHandles
         displayName: 'Run Frontend Tests'
+
