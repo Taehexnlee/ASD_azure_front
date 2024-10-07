@@ -4,16 +4,25 @@
 # https://aka.ms/yaml
 
 trigger:
-- main
+  branches:
+    include:
+      - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
-steps:
-- script: echo Hello, world!
-  displayName: 'Run a one-line script'
+jobs:
+  - job: 'Build_Frontend'
+    displayName: 'Build and Test React Frontend'
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: '14.x'
+      - script: |
+          npm install
+          npm run build
+        displayName: 'Build React Application'
 
-- script: |
-    echo Add other tasks to build, test, and deploy your project.
-    echo See https://aka.ms/yaml
-  displayName: 'Run a multi-line script'
+      - script: |
+          npm test
+        displayName: 'Run Frontend Tests'
