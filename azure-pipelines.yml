@@ -19,5 +19,5 @@ jobs:
         displayName: 'Build React Application'
 
       - script: |
-          npm test
+          npm test --watchAll=false
         displayName: 'Run Frontend Tests'
