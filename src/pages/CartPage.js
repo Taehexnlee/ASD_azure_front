@@ -2,7 +2,7 @@ import React from 'react';
 import { useUser } from '../context/UserContext';
 
 export default function CartPage() {
-  const { cart, updateCartItemQuantity } = useUser();
+  const { cart, updateCartItemQuantity, removeFromCart } = useUser();
 
   // Calculate the total price
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
@@ -38,6 +38,13 @@ export default function CartPage() {
                   />
                 </div>
                 <p className="mt-2"><strong>Subtotal:</strong> ${product.price * product.quantity}</p>
+                {/* Delete button */}
+                <button
+                  className="btn btn-danger mt-2"
+                  onClick={() => removeFromCart(product.id)}
+                >
+                  Remove
+                </button>
               </li>
             ))}
           </ul>

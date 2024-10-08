@@ -7,7 +7,7 @@ export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { user } = useUser();
+  const { user, addToCart } = useUser(); // Get user and addToCart from context
 
   useEffect(() => {
     loadProducts();
@@ -27,17 +27,10 @@ export default function ProductPage() {
     const category = e.target.value;
     setSelectedCategory(category);
 
-    console.log("Selected category:", category); // Debugging: Log selected category
-    console.log("Products before filtering:", products); // Debugging: Log products array
-
-    // Filter products based on the selected category
     if (category === "") {
-      // Show all products if "All Categories" is selected
       setFilteredProducts(products);
     } else {
-      // Filter products based on the selected category
       const filtered = products.filter(product => product.category === category);
-      console.log("Filtered products:", filtered); // Debugging: Log filtered products
       setFilteredProducts(filtered);
     }
   };
@@ -87,6 +80,14 @@ export default function ProductPage() {
                   <p className="card-text"><strong>Price:</strong> ${product.price}</p>
                 </div>
               </Link>
+              <div className="card-footer">
+                {/* Conditionally render Add to Cart button for non-admin users */}
+                {user && !user.isAdmin && (
+                  <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
+                    Add to Cart
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         ))}
