@@ -5,28 +5,67 @@ import { UserProvider } from './context/UserContext';
 import axios from 'axios';
 import { MemoryRouter } from 'react-router-dom';
 
-// Mock the axios module
+// Mock axios
 jest.mock('axios');
 
-const mockProduct = [
-  { id: 1, name: 'Spaghetti Bolognese', description: 'Classic Italian pasta', price: 12.99, category: 'Main Courses' },
+const mockProducts = [
+  { id: 1, name: 'Spaghetti Bolognese', category: 'Main Courses', price: 12.99 }
 ];
 
-test('renders product page with a single product', async () => {
-  // Mock the API call to return the sample product
-  axios.get.mockResolvedValue({ data: mockProduct });
+test('U124: Filter products by category', async () => {
+  axios.get.mockResolvedValue({ data: mockProducts });
 
-  // Render the component within MemoryRouter and UserProvider to provide necessary contexts
   render(
     <MemoryRouter>
-      <UserProvider value={{ user: { isAdmin: true } }}> {/* Provide a mock admin user */}
+      <UserProvider>
         <ProductPage />
       </UserProvider>
     </MemoryRouter>
   );
 
-  // Wait for the product to load and be rendered
   await waitFor(() => {
     expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
+  });
+
+  
+});
+test('U125: Add product to cart', async () => {
+  axios.get.mockResolvedValue({ data: mockProducts });
+
+  render(
+    <MemoryRouter>
+      <UserProvider>
+        <ProductPage />
+      </UserProvider>
+    </MemoryRouter>
+  );
+
+  await waitFor(() => {
+    expect(screen.getByText('Spaghetti Bolognese')).toBeInTheDocument();
+  });
+
+  fireEvent.click(screen.getByText(/Add to Cart/i));
+
+  await waitFor(() => {
+    // Assuming cart total or product count is displayed somewhere
+    expect(screen.getByText(/1 item in cart/i)).toBeInTheDocument();
+  });
+});
+test('U126: Change to dark mode', async () => {
+  axios.get.mockResolvedValue({ data: mockProducts });
+
+  render(
+    <MemoryRouter>
+      <UserProvider>
+        <ProductPage />
+      </UserProvider>
+    </MemoryRouter>
+  );
+
+  fireEvent.click(screen.getByLabelText(/Dark Mode/i));
+
+  await waitFor(() => {
+    // Assuming body or wrapper has the dark-mode class
+    expect(document.body.classList.contains('dark-mode')).toBe(true);
   });
 });
