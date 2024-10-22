@@ -72,7 +72,7 @@ export default function EditUser() {
                 E-mail
               </label>
               <input
-                type={"text"}
+                type={"email"}
                 className="form-control"
                 placeholder="Enter your e-mail address"
                 name="email"

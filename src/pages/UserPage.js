@@ -20,7 +20,7 @@ export default function UserPage() {
     
     // Filter out the admin account based on the "1234" condition
     const filteredUsers = result.data.filter(
-      (u) => !(u.name === "1234" && u.username === "1234" && u.email === "1234")
+      (u) => !(u.name === "1234" && u.username === "1234" && u.email === "1234@1234")
     );
 
     setUsers(filteredUsers);

@@ -62,7 +62,7 @@ export default function AddUser() {
             <div className="mb-3">
               <label htmlFor="Email" className="form-label">Email</label>
               <input
-                type="text"
+                type="email"
                 className="form-control"
                 placeholder="Enter your email"
                 name="email"

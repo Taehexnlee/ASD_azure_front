@@ -9,7 +9,7 @@ export const UserProvider = ({ children }) => {
   const [cart, setCart] = useState([]); // Store the cart items
 
   const login = (userInfo) => {
-    const isAdmin = userInfo.name === '1234' && userInfo.username === '1234' && userInfo.email === '1234';
+    const isAdmin = userInfo.name === '1234' && userInfo.username === '1234' && userInfo.email === '1234@1234';
     setUser({ ...userInfo, isAdmin });
   };
 
@@ -41,8 +41,12 @@ export const UserProvider = ({ children }) => {
     );
   };
 
+  const removeFromCart = (productId) => {
+    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+  };
+
   return (
-    <UserContext.Provider value={{ user, cart, login, logout, addToCart, updateCartItemQuantity }}>
+    <UserContext.Provider value={{ user, cart, login, logout, addToCart, updateCartItemQuantity, removeFromCart }}>
       {children}
     </UserContext.Provider>
   );
