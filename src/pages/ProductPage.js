@@ -7,7 +7,7 @@ export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
-  const { user, addToCart } = useUser(); // Get user and addToCart from context
+  const { user, addToCart } = useUser();
 
   useEffect(() => {
     loadProducts();
@@ -17,22 +17,40 @@ export default function ProductPage() {
     try {
       const result = await axios.get("http://localhost:8080/products");
       setProducts(result.data);
-      setFilteredProducts(result.data); // Initialize filtered products
+      setFilteredProducts(result.data); 
     } catch (error) {
       console.error("Error loading products:", error);
+    }
+  };
+
+  const toggleProductAvailability = async (id) => {
+    console.log(`Toggling availability for product ID: ${id}`);
+    try {
+      const result = await axios.put(`http://localhost:8080/product/${id}/toggleAvailability`);
+      const updatedProduct = result.data;
+      console.log("Updated product:", updatedProduct);
+
+
+      setProducts((prevProducts) =>
+        prevProducts.map((product) =>
+          product.id === updatedProduct.id ? updatedProduct : product
+        )
+      );
+
+      setFilteredProducts((prevFiltered) =>
+        prevFiltered.map((product) =>
+          product.id === updatedProduct.id ? updatedProduct : product
+        )
+      );
+    } catch (error) {
+      console.error("Error setting product active:", error);
     }
   };
 
   const handleCategoryChange = (e) => {
     const category = e.target.value;
     setSelectedCategory(category);
-
-    if (category === "") {
-      setFilteredProducts(products);
-    } else {
-      const filtered = products.filter(product => product.category === category);
-      setFilteredProducts(filtered);
-    }
+    setFilteredProducts(category === "" ? products : products.filter(product => product.category === category));
   };
 
   return (
@@ -45,7 +63,6 @@ export default function ProductPage() {
         </div>
       )}
 
-      {/* Category Filter */}
       <div className="my-3">
         <label htmlFor="categoryFilter" className="form-label">Filter by Category:</label>
         <select
@@ -78,14 +95,23 @@ export default function ProductPage() {
                 <div className="card-body">
                   <h5 className="card-title">{product.name}</h5>
                   <p className="card-text"><strong>Price:</strong> ${product.price}</p>
+                  <p className="card-text"><strong>Status:</strong> {product.active ? "Available" : "Unavailable"}</p>
                 </div>
               </Link>
               <div className="card-footer">
-                {/* Conditionally render Add to Cart button for non-admin users */}
-                {user && !user.isAdmin && (
-                  <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
-                    Add to Cart
+                {user && user.isAdmin ? (
+                  <button
+                    className={`btn ${product.active ? 'btn-primary' : 'btn-outline-secondary'} w-100`}
+                    onClick={() => toggleProductAvailability(product.id)}
+                  >
+                    {product.active ? "Set Inactive" : "Set Active"}
                   </button>
+                ) : (
+                  product.active && (
+                    <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
+                      Add to Cart
+                    </button>
+                  )
                 )}
               </div>
             </div>
