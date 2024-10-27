@@ -6,8 +6,8 @@ import { useUser } from '../context/UserContext';
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [availabilityFilter, setAvailabilityFilter] = useState("All"); // New state for availability filter
+  const [selectedCategories, setSelectedCategories] = useState([]); // State for multiple selected categories
+  const [availabilityFilter, setAvailabilityFilter] = useState("All");
   const { user, addToCart } = useUser();
 
   useEffect(() => {
@@ -24,16 +24,25 @@ export default function ProductPage() {
     }
   };
 
-  // Update filter criteria without applying it immediately
-  const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+  // Handle category selection for multiple categories
+  const handleCategoryChange = (e) => {
+    const category = e.target.value;
+    setSelectedCategories((prevSelected) =>
+      prevSelected.includes(category)
+        ? prevSelected.filter((cat) => cat !== category) // Remove if already selected
+        : [...prevSelected, category] // Add if not already selected
+    );
+  };
+
   const handleAvailabilityChange = (e) => setAvailabilityFilter(e.target.value);
 
-  // Filter products based on selected criteria
+  // Filter products based on selected categories and availability
   const handleSearch = () => {
     const filtered = products.filter((product) => {
-      const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
+      const matchesCategories = selectedCategories.length === 0 || selectedCategories.includes(product.category);
       const matchesAvailability = availabilityFilter === "All" || (availabilityFilter === "Available" && product.active);
-      return matchesCategory && matchesAvailability;
+
+      return matchesCategories && matchesAvailability;
     });
     setFilteredProducts(filtered);
   };
@@ -43,12 +52,10 @@ export default function ProductPage() {
       const result = await axios.put(`http://localhost:8080/product/${id}/toggleAvailability`);
       const updatedProduct = result.data;
 
-      // Update the products list
       setProducts((prevProducts) =>
         prevProducts.map((product) => (product.id === updatedProduct.id ? updatedProduct : product))
       );
 
-      // Apply the latest filter criteria after toggling
       handleSearch();
     } catch (error) {
       console.error("Error toggling product availability:", error);
@@ -66,22 +73,21 @@ export default function ProductPage() {
       )}
 
       <div className="my-3">
-        <label htmlFor="categoryFilter" className="form-label">Filter by Category:</label>
-        <select
-          id="categoryFilter"
-          className="form-control"
-          value={selectedCategory}
-          onChange={handleCategoryChange}
-        >
-          <option value="">All Categories</option>
-          <option value="Appetizers">Appetizers</option>
-          <option value="Main Courses">Main Courses</option>
-          <option value="Desserts">Desserts</option>
-          <option value="Drinks">Drinks</option>
-          <option value="Vegetarian">Vegetarian</option>
-          <option value="Non-Vegetarian">Non-Vegetarian</option>
-          <option value="Gluten-Free">Gluten-Free</option>
-        </select>
+        <label className="form-label">Filter by Category:</label>
+        <div className="form-check">
+          {["Appetizers", "Main Courses", "Desserts", "Drinks", "Vegetarian", "Non-Vegetarian", "Gluten-Free"].map((category) => (
+            <div key={category}>
+              <input
+                className="form-check-input"
+                type="checkbox"
+                value={category}
+                checked={selectedCategories.includes(category)}
+                onChange={handleCategoryChange}
+              />
+              <label className="form-check-label">{category}</label>
+            </div>
+          ))}
+        </div>
       </div>
 
       <div className="my-3">
