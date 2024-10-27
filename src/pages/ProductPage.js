@@ -6,8 +6,8 @@ import { useUser } from '../context/UserContext';
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [selectedCategories, setSelectedCategories] = useState([]); // State for multiple selected categories
-  const [availabilityFilter, setAvailabilityFilter] = useState("All");
+  const [selectedCategories, setSelectedCategories] = useState([]);
+  const [availabilityFilter, setAvailabilityFilter] = useState("All"); 
   const { user, addToCart } = useUser();
 
   useEffect(() => {
@@ -18,25 +18,22 @@ export default function ProductPage() {
     try {
       const result = await axios.get("http://localhost:8080/products");
       setProducts(result.data);
-      setFilteredProducts(result.data);  // Initialize with all products
+      setFilteredProducts(result.data);
     } catch (error) {
       console.error("Error loading products:", error);
     }
   };
 
-  // Handle category selection for multiple categories
-  const handleCategoryChange = (e) => {
-    const category = e.target.value;
+  const handleCategoryToggle = (category) => {
     setSelectedCategories((prevSelected) =>
       prevSelected.includes(category)
-        ? prevSelected.filter((cat) => cat !== category) // Remove if already selected
-        : [...prevSelected, category] // Add if not already selected
+        ? prevSelected.filter((cat) => cat !== category) 
+        : [...prevSelected, category]
     );
   };
 
   const handleAvailabilityChange = (e) => setAvailabilityFilter(e.target.value);
 
-  // Filter products based on selected categories and availability
   const handleSearch = () => {
     const filtered = products.filter((product) => {
       const matchesCategories = selectedCategories.length === 0 || selectedCategories.includes(product.category);
@@ -74,18 +71,16 @@ export default function ProductPage() {
 
       <div className="my-3">
         <label className="form-label">Filter by Category:</label>
-        <div className="form-check">
+        <div className="d-flex flex-wrap">
           {["Appetizers", "Main Courses", "Desserts", "Drinks", "Vegetarian", "Non-Vegetarian", "Gluten-Free"].map((category) => (
-            <div key={category}>
-              <input
-                className="form-check-input"
-                type="checkbox"
-                value={category}
-                checked={selectedCategories.includes(category)}
-                onChange={handleCategoryChange}
-              />
-              <label className="form-check-label">{category}</label>
-            </div>
+            <button
+              key={category}
+              type="button"
+              className={`btn m-1 ${selectedCategories.includes(category) ? 'btn-primary' : 'btn-outline-primary'}`}
+              onClick={() => handleCategoryToggle(category)}
+            >
+              {category}
+            </button>
           ))}
         </div>
       </div>
