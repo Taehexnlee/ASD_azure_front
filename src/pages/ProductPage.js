@@ -7,6 +7,7 @@ export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [availabilityFilter, setAvailabilityFilter] = useState("All"); // New state for availability filter
   const { user, addToCart } = useUser();
 
   useEffect(() => {
@@ -17,40 +18,49 @@ export default function ProductPage() {
     try {
       const result = await axios.get("http://localhost:8080/products");
       setProducts(result.data);
-      setFilteredProducts(result.data); 
+      filterProducts(result.data);  // Filter products on load
     } catch (error) {
       console.error("Error loading products:", error);
     }
   };
 
+  const filterProducts = (allProducts) => {
+    const filtered = allProducts.filter((product) => {
+      const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
+      const matchesAvailability = availabilityFilter === "All" || (availabilityFilter === "Available" && product.active);
+  
+      return matchesCategory && matchesAvailability;
+    });
+  
+    setFilteredProducts(filtered);
+  };
+  
+
   const toggleProductAvailability = async (id) => {
-    console.log(`Toggling availability for product ID: ${id}`);
     try {
       const result = await axios.put(`http://localhost:8080/product/${id}/toggleAvailability`);
       const updatedProduct = result.data;
-      console.log("Updated product:", updatedProduct);
-
 
       setProducts((prevProducts) =>
-        prevProducts.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product
-        )
+        prevProducts.map((product) => (product.id === updatedProduct.id ? updatedProduct : product))
       );
 
-      setFilteredProducts((prevFiltered) =>
-        prevFiltered.map((product) =>
-          product.id === updatedProduct.id ? updatedProduct : product
-        )
-      );
+      filterProducts(products.map((product) => 
+        product.id === updatedProduct.id ? updatedProduct : product
+      ));
     } catch (error) {
-      console.error("Error setting product active:", error);
+      console.error("Error toggling product availability:", error);
     }
   };
 
   const handleCategoryChange = (e) => {
-    const category = e.target.value;
-    setSelectedCategory(category);
-    setFilteredProducts(category === "" ? products : products.filter(product => product.category === category));
+    setSelectedCategory(e.target.value);
+    filterProducts(products);
+  };
+
+  const handleAvailabilityChange = (e) => {
+    setAvailabilityFilter(e.target.value);
+    filterProducts(products);
   };
 
   return (
@@ -81,6 +91,21 @@ export default function ProductPage() {
           <option value="Gluten-Free">Gluten-Free</option>
         </select>
       </div>
+
+      <div className="my-3">
+        <label htmlFor="availabilityFilter" className="form-label">Filter by Availability:</label>
+        <select
+          id="availabilityFilter"
+          className="form-control"
+          value={availabilityFilter}
+          onChange={handleAvailabilityChange}
+        >
+         
+          <option value="Available">All Products</option>
+          <option value="All">Available Only</option>
+        </select>
+      </div>
+
 
       <div className="row">
         {filteredProducts.map((product) => (
