@@ -7,7 +7,9 @@ export default function ViewProduct() {
   const [product, setProduct] = useState({
     name: "",
     description: "",
-    price: ""
+    price: "",
+    category: "",
+    active: true // Assuming default as active; it will be updated by loadProduct()
   });
 
   const { id } = useParams();
@@ -48,10 +50,14 @@ export default function ViewProduct() {
                 <li className='list-group-item'>
                   <b>Category:</b> {product.category}
                 </li>
+                <li className='list-group-item'>
+                  <b>Status:</b> {product.active ? "Available" : "Unavailable"}
+                </li>
               </ul>
             </div>
-            {/* Add to Cart Button for non-admin users */}
-            {user && !user.isAdmin && (
+
+            {/* Conditionally render Add to Cart button only if product is active */}
+            {user && !user.isAdmin && product.active && (
               <div className="card-footer">
                 <button className="btn btn-outline-primary w-100" onClick={() => addToCart(product)}>
                   Add to Cart
