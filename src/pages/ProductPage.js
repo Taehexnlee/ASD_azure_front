@@ -18,49 +18,41 @@ export default function ProductPage() {
     try {
       const result = await axios.get("http://localhost:8080/products");
       setProducts(result.data);
-      filterProducts(result.data);  // Filter products on load
+      setFilteredProducts(result.data);  // Initialize with all products
     } catch (error) {
       console.error("Error loading products:", error);
     }
   };
 
-  const filterProducts = (allProducts) => {
-    const filtered = allProducts.filter((product) => {
+  // Update filter criteria without applying it immediately
+  const handleCategoryChange = (e) => setSelectedCategory(e.target.value);
+  const handleAvailabilityChange = (e) => setAvailabilityFilter(e.target.value);
+
+  // Filter products based on selected criteria
+  const handleSearch = () => {
+    const filtered = products.filter((product) => {
       const matchesCategory = selectedCategory === "" || product.category === selectedCategory;
       const matchesAvailability = availabilityFilter === "All" || (availabilityFilter === "Available" && product.active);
-  
       return matchesCategory && matchesAvailability;
     });
-  
     setFilteredProducts(filtered);
   };
-  
 
   const toggleProductAvailability = async (id) => {
     try {
       const result = await axios.put(`http://localhost:8080/product/${id}/toggleAvailability`);
       const updatedProduct = result.data;
 
+      // Update the products list
       setProducts((prevProducts) =>
         prevProducts.map((product) => (product.id === updatedProduct.id ? updatedProduct : product))
       );
 
-      filterProducts(products.map((product) => 
-        product.id === updatedProduct.id ? updatedProduct : product
-      ));
+      // Apply the latest filter criteria after toggling
+      handleSearch();
     } catch (error) {
       console.error("Error toggling product availability:", error);
     }
-  };
-
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-    filterProducts(products);
-  };
-
-  const handleAvailabilityChange = (e) => {
-    setAvailabilityFilter(e.target.value);
-    filterProducts(products);
   };
 
   return (
@@ -100,12 +92,14 @@ export default function ProductPage() {
           value={availabilityFilter}
           onChange={handleAvailabilityChange}
         >
-         
-          <option value="Available">All Products</option>
-          <option value="All">Available Only</option>
+          <option value="All">All Products</option>
+          <option value="Available">Available Only</option>
         </select>
       </div>
 
+      <div className="text-center my-3">
+        <button className="btn btn-primary" onClick={handleSearch}>Search</button>
+      </div>
 
       <div className="row">
         {filteredProducts.map((product) => (
